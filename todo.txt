@@ -1,7 +1,14 @@
 Blockworld Project Todo:
 
-1. Build node frame
-    -node class
+1. Build frame=DONE
+    -implement board creator=DONE
+    -some sort of state class (or equivalent)=DONE
+
+2. Implement classes to make search possible=DONE
+    -successor function--do on the fly?
+        -actions=DONE
+    -node class=DONE
+    -solver class=DONE
 
 2(a). Implement depth first search
 
@@ -22,3 +29,7 @@ Blockworld Project Todo:
     -describe how problem difficulty was controlled
     -plot of results
     -brief discussion
+
+EXTRA:
+
+1. Stop impossible puzzles being made.

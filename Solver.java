@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Solver {
 
     public static void main(String[] args) {
@@ -7,6 +9,7 @@ public class Solver {
 
         BlockWorld problem = new BlockWorld(gridSize, problemSize);
         problem.generateWorld();
+        problem.getActions();
 
     }
 
