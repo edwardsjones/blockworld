@@ -1,0 +1,24 @@
+Blockworld Project Todo:
+
+1. Build node frame
+    -node class
+
+2(a). Implement depth first search
+
+2(b). Implement breadth first search
+
+3(c). Implement iterative deepening search
+
+3(d). Implement some form of heuristic search
+
+4. Run each search with various problem sizes and record results
+
+5. Graph it
+
+6. Write report
+    -description of methods
+    -evidence of search methods in operation
+    -example solutions
+    -describe how problem difficulty was controlled
+    -plot of results
+    -brief discussion
