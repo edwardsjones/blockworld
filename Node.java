@@ -26,7 +26,12 @@ public class Node {
     }
 
     public int[][] getState() {
-        return state.clone();
+        int length = state.length;
+        int[][] clone = new int[length][length];
+        for (int i = 0; i < length; i++) {
+            clone[i] = state[i].clone();
+        }
+        return clone;
     }
 
     public int getDepth() {

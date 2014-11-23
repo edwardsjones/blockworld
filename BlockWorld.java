@@ -94,11 +94,14 @@ public class BlockWorld {
     }
 
     public int[][] getState() {
-        int[][] clone = tiles.clone();
+        int[][] clone = new int[gridSize][gridSize];
+        for (int i = 0; i < gridSize; i++) {
+            clone[i] = tiles[i].clone(); 
+        }
         return clone;
     }
 
-    public ArrayList<String> getActions() {
+    public ArrayList<String> getActions(int[][] state) {
 
         int agentX = -1;
         int agentY = -1;
@@ -106,7 +109,7 @@ public class BlockWorld {
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
 
-                if (tiles[i][j] == 0) {
+                if (state[i][j] == 0) {
                     agentX = i;
                     agentY = j;
                 }        

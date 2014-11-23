@@ -1,8 +1,12 @@
 import java.util.Stack;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 
 public class Solver {
+
+    private int problemSize; 
+    private int gridSize;
 
     public static void main(String[] args) {
 
@@ -13,43 +17,106 @@ public class Solver {
         problem.generateWorld();
 
         Solver solver = new Solver();
+        solver.setProblemSize(problemSize);
+        solver.setGridSize(gridSize);
         solver.visualiseState(problem.getState());
-
-        Node start = new Node(null, problem.getState(), 0, "START", 0); 
-        Stack<Node> fringe = solver.expandDF(start, problem);
+    
+        Stack<Node> fringe = new Stack<Node>();
+        Node solution = solver.depthFirstSearch(problem, fringe);
+        solver.visualiseState(solution.getState());
 
     }
 
-    // to be used in depthFirstSearch as it returns a stack
-    private Stack<Node> expandDF(Node parent, BlockWorld problem) {
+    private ArrayList<Node> expand(Node parent, BlockWorld problem) {
     
-        Stack<Node> successors = new Stack<Node>();
-        ArrayList<String> possibleActions = problem.getActions();
+        ArrayList<Node> successors = new ArrayList<Node>();
+        ArrayList<String> possibleActions = problem.getActions(parent.getState());
 
-        // state in the node is always used.
+        // state in the node is always used (problem should never change)
+        System.out.println("This is the parent.");
+        visualiseState(parent.getState());
         for (String action : possibleActions) {
             Node child = new Node(parent, BlockWorld.move(action, parent.getState()), parent.getDepth() + 1, action, parent.getPathCost() + 1);
-            //check if state already visited?
-            successors.push(child); 
+            System.out.println("MOVING: " + action);
+            visualiseState(child.getState());
+            successors.add(child); 
         } 
 
         return successors;
 
     }
 
-    private void depthFirstSearch(BlockWorld problem, Stack fringe) {
+    private Node depthFirstSearch(BlockWorld problem, Stack<Node> fringe) {
+
+        Node start = new Node(null, problem.getState(), 0, "START", 0);
+        ArrayList<int[][]> visited = new ArrayList<int[][]>();
+        fringe.push(start);
+        visited.add(start.getState());
+
+        while (!fringe.isEmpty()) {
+
+            Node current = fringe.pop();
+
+            if (goalTest(current))
+                return current;
+            visited.add(current.getState());
+
+            ArrayList<Node> next = expand(current, problem);
+            
+            for (Node each : next) {
+                if (!contained(visited, each.getState())) 
+                    fringe.push(each);
+            }
+
+        }
+
+        return null;
 
     } 
 
     private void visualiseState(int[][] state) {
-        int size = state.length;
-        for (int i = 0; i < size; i++) {
+
+        for (int i = 0; i < gridSize; i++) {
             System.out.printf("|\t");
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < gridSize; j++) {
                 System.out.printf(state[i][j] + "\t");
             }
             System.out.printf("|\n");
         } 
+        System.out.printf("|\n");
+    }
+
+    private boolean goalTest(Node node) {
+        int[][] state = node.getState(); 
+        System.out.println("Currently testing the following state:");
+        visualiseState(state);
+        for (int i = 0; i < gridSize; i++) {
+            if (state[gridSize-1][i] >= 1) {
+                int counter = 0;
+                for (int j = gridSize - 1; j >= (gridSize - problemSize); j--) {
+                    if (state[j][i] > 0) counter++;       
+                }
+                if (counter == problemSize) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean contained(ArrayList<int[][]> visited, int[][] testState) {
+        for (int[][] each : visited) {
+            if (Arrays.deepEquals(each, testState)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void setProblemSize(int problemSize) {
+        this.problemSize = problemSize;
+    }
+
+    private void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
     }
 
 }

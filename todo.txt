@@ -13,7 +13,11 @@ Blockworld Project Todo:
 2(a). Implement depth first search
     -add expand function=DONE
     -add some sort of basic ASCII problem viewer=DONE
-    -implement pseudo code with stack
+    -implement pseudo code with stack=DONE
+    -need to check if state is already visited=DONE
+    -implement goal testing method=DONE
+        *assuming that goal state only permits towers that start from the bottom
+    -implement some sort of "solution" class
 
 2(b). Implement breadth first search
 
