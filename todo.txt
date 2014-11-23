@@ -11,8 +11,8 @@ Blockworld Project Todo:
     -solver class=DONE
 
 2(a). Implement depth first search
-    -add expand function
-    -add some sort of basic ASCII problem viewer 
+    -add expand function=DONE
+    -add some sort of basic ASCII problem viewer=DONE
     -implement pseudo code with stack
 
 2(b). Implement breadth first search

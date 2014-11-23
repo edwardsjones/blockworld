@@ -24,7 +24,7 @@ public class BlockWorld {
         
         Random rng = new Random();
 
-        for (int i = 0; i < blocks; i++) {
+        for (int i = 0; i <= blocks; i++) {
 
             boolean generating = true;
 

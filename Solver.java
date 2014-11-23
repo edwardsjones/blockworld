@@ -13,6 +13,7 @@ public class Solver {
         problem.generateWorld();
 
         Solver solver = new Solver();
+        solver.visualiseState(problem.getState());
 
         Node start = new Node(null, problem.getState(), 0, "START", 0); 
         Stack<Node> fringe = solver.expandDF(start, problem);
@@ -39,5 +40,16 @@ public class Solver {
     private void depthFirstSearch(BlockWorld problem, Stack fringe) {
 
     } 
+
+    private void visualiseState(int[][] state) {
+        int size = state.length;
+        for (int i = 0; i < size; i++) {
+            System.out.printf("|\t");
+            for (int j = 0; j < size; j++) {
+                System.out.printf(state[i][j] + "\t");
+            }
+            System.out.printf("|\n");
+        } 
+    }
 
 }
