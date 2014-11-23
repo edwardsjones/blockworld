@@ -21,7 +21,7 @@ public class Node {
         return parent;
     }
 
-    public String getActions() {
+    public String getAction() {
         return action;
     }
 

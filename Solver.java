@@ -2,6 +2,7 @@ import java.util.Stack;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
+import java.util.Collections;
 
 public class Solver {
 
@@ -24,6 +25,7 @@ public class Solver {
         Stack<Node> fringe = new Stack<Node>();
         Node solution = solver.depthFirstSearch(problem, fringe);
         solver.visualiseState(solution.getState());
+        solver.showSolution(solution);
 
     }
 
@@ -31,14 +33,11 @@ public class Solver {
     
         ArrayList<Node> successors = new ArrayList<Node>();
         ArrayList<String> possibleActions = problem.getActions(parent.getState());
+        Collections.shuffle(possibleActions);
 
         // state in the node is always used (problem should never change)
-        System.out.println("This is the parent.");
-        visualiseState(parent.getState());
         for (String action : possibleActions) {
             Node child = new Node(parent, BlockWorld.move(action, parent.getState()), parent.getDepth() + 1, action, parent.getPathCost() + 1);
-            System.out.println("MOVING: " + action);
-            visualiseState(child.getState());
             successors.add(child); 
         } 
 
@@ -56,13 +55,11 @@ public class Solver {
         while (!fringe.isEmpty()) {
 
             Node current = fringe.pop();
-
             if (goalTest(current))
                 return current;
-            visited.add(current.getState());
 
+            visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
-            
             for (Node each : next) {
                 if (!contained(visited, each.getState())) 
                     fringe.push(each);
@@ -88,8 +85,6 @@ public class Solver {
 
     private boolean goalTest(Node node) {
         int[][] state = node.getState(); 
-        System.out.println("Currently testing the following state:");
-        visualiseState(state);
         for (int i = 0; i < gridSize; i++) {
             if (state[gridSize-1][i] >= 1) {
                 int counter = 0;
@@ -109,6 +104,24 @@ public class Solver {
             }
         }
         return false;
+    }
+
+    private void showSolution(Node solved) {
+        System.out.println("Cost of solution: " + solved.getPathCost());
+        System.out.println("Depth of node: " + solved.getDepth());
+        Stack<String> solution = new Stack<String>();
+        Node current = solved;
+        do {
+            solution.push(current.getAction());
+            if (current.getDepth() != 0) 
+                current = current.getParent();
+        } while (!current.getAction().equals("START")); 
+        
+        System.out.printf("Moves from start to finish:\t");
+        while (!solution.isEmpty()) {
+            System.out.printf(solution.pop() + "\t");
+        }
+        System.out.printf("|\n");
     }
 
     private void setProblemSize(int problemSize) {
