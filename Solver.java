@@ -22,10 +22,15 @@ public class Solver {
         solver.setGridSize(gridSize);
         solver.visualiseState(problem.getState());
     
-        Stack<Node> fringe = new Stack<Node>();
-        Node solution = solver.depthFirstSearch(problem, fringe);
-        solver.visualiseState(solution.getState());
-        solver.showSolution(solution);
+        Stack<Node> stackFringe = new Stack<Node>();
+        Node solutionDFS = solver.depthFirstSearch(problem, stackFringe);
+        solver.visualiseState(solutionDFS.getState());
+        solver.showSolution(solutionDFS);
+
+        ArrayDeque<Node> queueFringe = new ArrayDeque<Node>();
+        Node solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
+        solver.visualiseState(solutionBFS.getState());
+        solver.showSolution(solutionBFS);
 
     }
 
@@ -42,6 +47,61 @@ public class Solver {
         } 
 
         return successors;
+
+    }
+
+    private void depthLimitedSearch(BlockWorld problem, int limit) {
+
+    }
+
+    //null object for fail, same for cutoff, new for solution
+    private void depthRecursor(Node start, BlockWorld problem, int limit) {
+        boolean cutoffReached = false;
+        if (goalTest(start)) {
+            return start;
+        } else if (start.getDepth() == limit) {
+            //possible null object?
+            return null;
+        } else {
+            ArrayList<Node> successors = expand(start, problem);
+            for (Node each : successors) {
+                //result = depthRecursor(each, problem, limit);
+                //if (result = cutoff) {
+                //    cutoffReached = true;
+                //} else if (result != failure) 
+                //    return result; 
+            }
+        }
+        //if (cutoffReached) {
+        //    return cutoff;
+        //} else {
+        //    return failure;
+        //}
+    }
+
+    private Node breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
+        
+        Node start = new Node(null, problem.getState(), 0, "START", 0);
+        ArrayList<int[][]> visited = new ArrayList<int[][]>();
+        fringe.add(start);
+        visited.add(start.getState());
+
+        while (!fringe.isEmpty()) {
+
+            Node current = fringe.poll();
+            if (goalTest(current))
+                return current;
+
+            visited.add(current.getState());
+            ArrayList<Node> next = expand(current, problem);
+            for (Node each : next) {
+                if (!contained(visited, each.getState())) 
+                    fringe.add(each);
+            }
+
+        }
+
+        return null;
 
     }
 

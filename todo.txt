@@ -20,9 +20,12 @@ Blockworld Project Todo:
     -implement some sort of "solution" class=DONE
     -randomise moves=DONE
 
-2(b). Implement breadth first search
+2(b). Implement breadth first search=DONE
+    -replace dfs with a queue and see if it works=DONE
 
 3(c). Implement iterative deepening search
+    -implement pseudo code for depth limited search
+    -implement iterative deepening pseudo code
 
 3(d). Implement some form of heuristic search
 
