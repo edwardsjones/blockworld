@@ -44,6 +44,55 @@ public class BlockWorld {
 
     }
 
+    public static int[][] move(String action, int[][] state) {
+
+        int agentRow = -1;
+        int agentCol = -1;
+        int length = state.length;
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+
+                if (state[i][j] == 0) {
+                    agentRow = i;
+                    agentCol = j;
+                }        
+
+            }
+        }
+
+        int store;
+
+        if (action.equals("UP")) {
+            store = state[agentRow-1][agentCol];
+            state[agentRow-1][agentCol] = 0;
+            state[agentRow][agentCol] = store;            
+        } else if (action.equals("DOWN")) {
+            store = state[agentRow+1][agentCol];
+            state[agentRow+1][agentCol] = 0;
+            state[agentRow][agentCol] = store;            
+        } else if (action.equals("LEFT")) {
+            store = state[agentRow][agentCol-1];
+            state[agentRow][agentCol-1] = 0;
+            state[agentRow][agentCol] = store;            
+        } else if (action.equals("RIGHT")) {
+            store = state[agentRow][agentCol+1];
+            state[agentRow][agentCol+1] = 0;
+            state[agentRow][agentCol] = store;            
+        } 
+
+        return state;
+
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
+    
+    public int getProblemSize() {
+        return blocks;
+    }
+
     public int[][] getState() {
         int[][] clone = tiles.clone();
         return clone;
