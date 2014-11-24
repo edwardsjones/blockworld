@@ -55,12 +55,11 @@ public class Solver {
     }
 
     //null object for fail, same for cutoff, new for solution
-    private void depthRecursor(Node start, BlockWorld problem, int limit) {
+    private Node depthRecursor(Node start, BlockWorld problem, int limit) {
         boolean cutoffReached = false;
         if (goalTest(start)) {
             return start;
         } else if (start.getDepth() == limit) {
-            //possible null object?
             return null;
         } else {
             ArrayList<Node> successors = expand(start, problem);

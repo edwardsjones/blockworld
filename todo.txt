@@ -24,10 +24,13 @@ Blockworld Project Todo:
     -replace dfs with a queue and see if it works=DONE
 
 3(c). Implement iterative deepening search
+    -make wrapper solution class
     -implement pseudo code for depth limited search
     -implement iterative deepening pseudo code
 
 3(d). Implement some form of heuristic search
+
+3(e). Implement solution usage in 2(a) and 2(b)
 
 4. Run each search with various problem sizes and record results
 
