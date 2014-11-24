@@ -32,8 +32,9 @@ Blockworld Project Todo:
 2(d). Implement some form of heuristic search
     -think of a heuristic=DONE
     -program it=DONE
-    -implement it with expand
-    -possibly use a priority queue
+    -implement it with expand=DONE
+    -possibly use a priority queue=DONE
+    -test that evaluator works
 
 2(e). Implement solution usage in 2(a) and 2(b)=DONE
 

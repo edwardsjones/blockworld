@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Solver {
 
@@ -30,10 +32,13 @@ public class Solver {
         ArrayDeque<Node> queueFringe = new ArrayDeque<Node>();
         Solution solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
         solver.showSolution(solutionBFS);
-        */
         
         Solution solutionIDS = solver.iterativeDeepeningSearch(problem);
         solver.showSolution(solutionIDS);
+        */
+        
+        Solution solutionHS = solver.heuristicSearch(problem);
+        solver.showSolution(solutionHS);
 
     }
 
@@ -52,6 +57,7 @@ public class Solver {
         return successors;
 
     }
+
 
     private Solution iterativeDeepeningSearch(BlockWorld problem) {
         int depth = 5;
@@ -96,6 +102,36 @@ public class Solver {
             Solution failSolution = new Solution(start, 0);
             return failSolution;
         }
+    }
+
+    private Solution heuristicSearch(BlockWorld problem) {
+
+        Node start = new Node(null, problem.getState(), 0, "START", 0);
+        ArrayList<int[][]> visited = new ArrayList<int[][]>();
+
+        HeuristicComparator comp = new HeuristicComparator();
+        PriorityQueue<Node> fringe = new PriorityQueue<Node>(10, comp);
+
+        fringe.add(start);
+        visited.add(start.getState());
+
+        while (!fringe.isEmpty()) {
+    
+            Node current = fringe.poll();
+            if (goalTest(current))
+                return new Solution(current, 1);
+
+            visited.add(current.getState());
+            ArrayList<Node> next = expand(current, problem);
+            for (Node each : next) {
+                if (!contained(visited, each.getState())) 
+                    fringe.add(each);
+            }
+        
+        }
+
+        return new Solution(start, 0);
+        
     }
 
     private Solution breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
@@ -234,6 +270,23 @@ public class Solver {
 
     private void setGridSize(int gridSize) {
         this.gridSize = gridSize;
+    }
+
+    class HeuristicComparator implements Comparator<Node> {
+            
+        // least score should be at bottom, so tests inverted
+        public int compare(Node n1, Node n2) {
+            int score1 = evaluateState(n1.getState());
+            int score2 = evaluateState(n2.getState());
+            if (score1 < score2) {
+                return 1;
+            } else if (score1 == score2) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+
     }
 
 }
