@@ -23,14 +23,15 @@ Blockworld Project Todo:
 2(b). Implement breadth first search=DONE
     -replace dfs with a queue and see if it works=DONE
 
-3(c). Implement iterative deepening search
-    -make wrapper solution class
-    -implement pseudo code for depth limited search
-    -implement iterative deepening pseudo code
+2(c). Implement iterative deepening search=DONE
+    -make wrapper solution class=DONE
+    -implement pseudo code for depth limited search=DONE
+    -implement iterative deepening pseudo code=DONE
+    -test depth limited is checking all nodes=DONE
 
-3(d). Implement some form of heuristic search
+2(d). Implement some form of heuristic search
 
-3(e). Implement solution usage in 2(a) and 2(b)
+2(e). Implement solution usage in 2(a) and 2(b)=DONE
 
 4. Run each search with various problem sizes and record results
 

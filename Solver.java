@@ -22,15 +22,18 @@ public class Solver {
         solver.setGridSize(gridSize);
         solver.visualiseState(problem.getState());
     
+        /*
         Stack<Node> stackFringe = new Stack<Node>();
-        Node solutionDFS = solver.depthFirstSearch(problem, stackFringe);
-        solver.visualiseState(solutionDFS.getState());
+        Solution solutionDFS = solver.depthFirstSearch(problem, stackFringe);
         solver.showSolution(solutionDFS);
 
         ArrayDeque<Node> queueFringe = new ArrayDeque<Node>();
-        Node solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
-        solver.visualiseState(solutionBFS.getState());
+        Solution solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
         solver.showSolution(solutionBFS);
+        */
+        
+        Solution solutionIDS = solver.iterativeDeepeningSearch(problem);
+        solver.showSolution(solutionIDS);
 
     }
 
@@ -50,35 +53,52 @@ public class Solver {
 
     }
 
-    private void depthLimitedSearch(BlockWorld problem, int limit) {
+    private Solution iterativeDeepeningSearch(BlockWorld problem) {
+        int depth = 5;
+        while (true) {
+            Solution result = depthLimitedSearch(problem, depth);
+            if (result.getStatus() != 2) 
+                return result;
+            depth++;
+        }
+    }
 
+    private Solution depthLimitedSearch(BlockWorld problem, int limit) {
+        Node start = new Node(null, problem.getState(), 0, "START", 0);
+        Solution answer = depthRecursor(start, problem, limit);
+        return answer;
     }
 
     //null object for fail, same for cutoff, new for solution
-    private Node depthRecursor(Node start, BlockWorld problem, int limit) {
+    private Solution depthRecursor(Node start, BlockWorld problem, int limit) {
         boolean cutoffReached = false;
         if (goalTest(start)) {
-            return start;
+            Solution successSolution = new Solution(start, 1);
+            return successSolution;
         } else if (start.getDepth() == limit) {
-            return null;
+            Solution cutoffSolution = new Solution(start, 2);
+            return cutoffSolution;
         } else {
             ArrayList<Node> successors = expand(start, problem);
             for (Node each : successors) {
-                //result = depthRecursor(each, problem, limit);
-                //if (result = cutoff) {
-                //    cutoffReached = true;
-                //} else if (result != failure) 
-                //    return result; 
+                Solution result = depthRecursor(each, problem, limit);
+                if (result.getStatus() == 2) {
+                    cutoffReached = true;
+                } else if (result.getStatus() != 0) {
+                    return result;
+                }
             }
         }
-        //if (cutoffReached) {
-        //    return cutoff;
-        //} else {
-        //    return failure;
-        //}
+        if (cutoffReached) {
+            Solution cutoffSol = new Solution(start, 2);
+            return cutoffSol;
+        } else {
+            Solution failSolution = new Solution(start, 0);
+            return failSolution;
+        }
     }
 
-    private Node breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
+    private Solution breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
         
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
@@ -89,7 +109,7 @@ public class Solver {
 
             Node current = fringe.poll();
             if (goalTest(current))
-                return current;
+                return new Solution(current, 1);
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
@@ -100,11 +120,11 @@ public class Solver {
 
         }
 
-        return null;
+        return new Solution(start, 0);
 
     }
 
-    private Node depthFirstSearch(BlockWorld problem, Stack<Node> fringe) {
+    private Solution depthFirstSearch(BlockWorld problem, Stack<Node> fringe) {
 
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
@@ -115,7 +135,7 @@ public class Solver {
 
             Node current = fringe.pop();
             if (goalTest(current))
-                return current;
+                return new Solution(current, 1);
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
@@ -126,7 +146,7 @@ public class Solver {
 
         }
 
-        return null;
+        return new Solution(start, 0);
 
     } 
 
@@ -165,20 +185,21 @@ public class Solver {
         return false;
     }
 
-    private void showSolution(Node solved) {
+    private void showSolution(Solution solution) {
+        Node solved = solution.getNode();
         System.out.println("Cost of solution: " + solved.getPathCost());
         System.out.println("Depth of node: " + solved.getDepth());
-        Stack<String> solution = new Stack<String>();
+        Stack<String> winningActions = new Stack<String>();
         Node current = solved;
         do {
-            solution.push(current.getAction());
+            winningActions.push(current.getAction());
             if (current.getDepth() != 0) 
                 current = current.getParent();
         } while (!current.getAction().equals("START")); 
         
         System.out.printf("Moves from start to finish:\t");
-        while (!solution.isEmpty()) {
-            System.out.printf(solution.pop() + "\t");
+        while (!winningActions.isEmpty()) {
+            System.out.printf(winningActions.pop() + "\t");
         }
         System.out.printf("|\n");
     }
