@@ -204,6 +204,30 @@ public class Solver {
         System.out.printf("|\n");
     }
 
+    // Works by providing a score of what the biggest partial tower is
+    private int evaluateState(int[][] state) {
+
+        int max = 0;
+        int count = 0;
+
+        for (int j = 0; j < gridSize; j++) {
+
+            for (int i = gridSize - 1; i >= gridSize - problemSize; i--) {
+                if (state[i][j] > 0) 
+                    count++;                
+            }
+
+            if (count > max)
+                max = count;
+
+            count = 0;
+
+        }
+
+        return max;
+
+    }
+
     private void setProblemSize(int problemSize) {
         this.problemSize = problemSize;
     }

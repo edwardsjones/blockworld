@@ -30,6 +30,10 @@ Blockworld Project Todo:
     -test depth limited is checking all nodes=DONE
 
 2(d). Implement some form of heuristic search
+    -think of a heuristic=DONE
+    -program it=DONE
+    -implement it with expand
+    -possibly use a priority queue
 
 2(e). Implement solution usage in 2(a) and 2(b)=DONE
 
@@ -48,3 +52,5 @@ Blockworld Project Todo:
 EXTRA:
 
 1. Stop impossible puzzles being made.
+2. Iterative deepening recognises states already explored 
+    -maybe just a dynamic depth depending on problem size
