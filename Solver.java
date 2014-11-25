@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 
 public class Solver {
 
-    private int problemSize, gridSize, nodeCounter;
+    private int problemSize, gridSize, nodeCounter, nodeExpansion;
 
     public static void main(String[] args) {
 
@@ -23,21 +23,21 @@ public class Solver {
         solver.setGridSize(gridSize);
         solver.visualiseState(problem.getState());
     
-        /*
         Stack<Node> stackFringe = new Stack<Node>();
         Solution solutionDFS = solver.depthFirstSearch(problem, stackFringe);
         solver.showSolution(solutionDFS);
 
+        /*
         ArrayDeque<Node> queueFringe = new ArrayDeque<Node>();
         Solution solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
         solver.showSolution(solutionBFS);
         
         Solution solutionIDS = solver.iterativeDeepeningSearch(problem);
         solver.showSolution(solutionIDS);
-        */
         
         Solution solutionHS = solver.heuristicSearch(problem);
         solver.showSolution(solutionHS);
+        */
 
     }
 
@@ -45,7 +45,6 @@ public class Solver {
     
         ArrayList<Node> successors = new ArrayList<Node>();
         ArrayList<String> possibleActions = problem.getActions(parent.getState());
-        Collections.shuffle(possibleActions);
 
         // state in the node is always used (problem should never change)
         for (String action : possibleActions) {
@@ -61,12 +60,16 @@ public class Solver {
     private Solution iterativeDeepeningSearch(BlockWorld problem) {
 
         nodeCounter = 0;
+        nodeExpansion = 1;
         int depth = 5;
 
         while (true) {
             Solution result = depthLimitedSearch(problem, depth);
-            if (result.getStatus() != 2) 
+            if (result.getStatus() != 2) {
+                System.out.println("Nodes checked: " + nodeCounter);
+                System.out.println("Nodes expanded: " + nodeExpansion);
                 return result;
+            }
             depth++;
         }
 
@@ -94,6 +97,7 @@ public class Solver {
             return cutoffSolution;
         } else {
             ArrayList<Node> successors = expand(start, problem);
+            nodeExpansion = nodeExpansion + successors.size();
             for (Node each : successors) {
                 Solution result = depthRecursor(each, problem, limit);
                 if (result.getStatus() == 2) {
@@ -117,6 +121,8 @@ public class Solver {
     private Solution heuristicSearch(BlockWorld problem) {
 
         int nodesChecked = 0;
+        int nodesExpanded = 1;
+
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
 
@@ -133,11 +139,13 @@ public class Solver {
             nodesChecked++;
             if (goalTest(current)) {
                 System.out.println("Nodes checked: " + nodesChecked);
+                System.out.println("Nodes expanded: " + nodesExpanded);
                 return new Solution(current, 1);
             }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
+            nodesExpanded = nodesExpanded + next.size();
             for (Node each : next) {
                 if (!contained(visited, each.getState())) 
                     fringe.add(each);
@@ -146,6 +154,7 @@ public class Solver {
         }
 
         System.out.println("Nodes checked: " + nodesChecked);
+        System.out.println("Nodes expanded: " + nodesExpanded);
         return new Solution(start, 0);
         
     }
@@ -153,6 +162,8 @@ public class Solver {
     private Solution breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
         
         int nodesChecked = 0;
+        int nodesExpanded = 1;
+
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
         fringe.add(start);
@@ -164,11 +175,13 @@ public class Solver {
             nodesChecked++;
             if (goalTest(current)) {
                 System.out.println("Nodes checked: " + nodesChecked);
+                System.out.println("Nodes expanded: " + nodesExpanded);
                 return new Solution(current, 1);
             }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
+            nodesExpanded = nodesExpanded + next.size();
             for (Node each : next) {
                 if (!contained(visited, each.getState())) 
                     fringe.add(each);
@@ -177,6 +190,7 @@ public class Solver {
         }
 
         System.out.println("Nodes checked: " + nodesChecked);
+        System.out.println("Nodes expanded: " + nodesExpanded);
         return new Solution(start, 0);
 
     }
@@ -184,6 +198,8 @@ public class Solver {
     private Solution depthFirstSearch(BlockWorld problem, Stack<Node> fringe) {
 
         int nodesChecked = 0;
+        int nodesExpanded = 1;
+
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
         fringe.push(start);
@@ -195,11 +211,15 @@ public class Solver {
             nodesChecked++;
             if (goalTest(current)) {
                 System.out.println("Nodes checked: " + nodesChecked);
+                System.out.println("Nodes expanded: " + nodesExpanded);
                 return new Solution(current, 1);
             }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
+            nodesExpanded = nodesExpanded + next.size();
+            Collections.shuffle(next);
+
             for (Node each : next) {
                 if (!contained(visited, each.getState())) 
                     fringe.push(each);
@@ -208,6 +228,7 @@ public class Solver {
         }
 
         System.out.println("Nodes checked: " + nodesChecked);
+        System.out.println("Nodes expanded: " + nodesExpanded);
         return new Solution(start, 0);
 
     } 

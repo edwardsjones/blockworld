@@ -40,7 +40,9 @@ Blockworld Project Todo:
 
 3. Run each search with various problem sizes and record results
     -implement node counter=DONE
-    -choose results to take
+    -choose permanent start state=DONE
+    -change start state to be fixed=DONE
+    -choose results to take=DONE
     -record them
 
 4. Graph it

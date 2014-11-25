@@ -22,24 +22,84 @@ public class BlockWorld {
             }
         }
         
-        Random rng = new Random();
-
         for (int i = 0; i <= blocks; i++) {
 
-            boolean generating = true;
-
-            while (generating) {
-
-                int first = rng.nextInt(gridSize);
-                int second = rng.nextInt(gridSize); 
-
-                if (tiles[first][second] == -1) {
-                    tiles[first][second] = i;
-                    generating = false;
-                }
-
+            if (i == 0) {
+                tiles[1][0] = i;
+            } else if (i % 4 == 1) {
+                placeTopLeft(i);
+            } else if (i % 4 == 2) {
+                placeTopRight(i);
+            } else if (i % 4 == 3) {
+                placeBottomRight(i);
+            } else if (i % 4 == 0) {
+                placeBottomLeft(i);
             }
 
+        }
+
+    }
+
+    private void placeTopLeft(int number) {
+
+        boolean blockPlaced = false;
+        int i = 0;
+
+        while (!blockPlaced) {
+            if (tiles[0][i] == -1) {
+                tiles[0][i] = number;
+                blockPlaced = true; 
+            } else {
+                i++;
+            }
+        }
+
+    }
+
+    private void placeTopRight(int number) {
+
+        boolean blockPlaced = false;
+        int i = 0;
+
+        while (!blockPlaced) {
+            if (tiles[i][gridSize-1] == -1) {
+                tiles[i][gridSize-1] = number;
+                blockPlaced = true;
+            } else {
+                i++;
+            }
+        }
+
+    }
+
+    private void placeBottomRight(int number) {
+
+        boolean blockPlaced = false;
+        int i = gridSize - 1;
+
+        while (!blockPlaced) {
+            if (tiles[gridSize - 1][i] == -1) {
+                tiles[gridSize - 1][i] = number;
+                blockPlaced = true;
+            } else {
+                i--;
+            }
+        }
+
+    }
+
+    private void placeBottomLeft(int number) {
+
+        boolean blockPlaced = false;
+        int i = gridSize - 1;
+
+        while (!blockPlaced) {
+            if (tiles[i][0] == -1) {
+                tiles[i][0] = number;
+                blockPlaced = true;
+            } else {
+                i--;
+            }
         }
 
     }
