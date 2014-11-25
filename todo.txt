@@ -29,20 +29,23 @@ Blockworld Project Todo:
     -implement iterative deepening pseudo code=DONE
     -test depth limited is checking all nodes=DONE
 
-2(d). Implement some form of heuristic search
+2(d). Implement some form of heuristic search=DONE
     -think of a heuristic=DONE
     -program it=DONE
     -implement it with expand=DONE
     -possibly use a priority queue=DONE
-    -test that evaluator works
+    -test that evaluator works=DONE
 
 2(e). Implement solution usage in 2(a) and 2(b)=DONE
 
-4. Run each search with various problem sizes and record results
+3. Run each search with various problem sizes and record results
+    -implement node counter=DONE
+    -choose results to take
+    -record them
 
-5. Graph it
+4. Graph it
 
-6. Write report
+5. Write report
     -description of methods
     -evidence of search methods in operation
     -example solutions
@@ -53,5 +56,3 @@ Blockworld Project Todo:
 EXTRA:
 
 1. Stop impossible puzzles being made.
-2. Iterative deepening recognises states already explored 
-    -maybe just a dynamic depth depending on problem size

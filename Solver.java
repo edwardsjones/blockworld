@@ -8,8 +8,7 @@ import java.util.PriorityQueue;
 
 public class Solver {
 
-    private int problemSize; 
-    private int gridSize;
+    private int problemSize, gridSize, nodeCounter;
 
     public static void main(String[] args) {
 
@@ -60,24 +59,33 @@ public class Solver {
 
 
     private Solution iterativeDeepeningSearch(BlockWorld problem) {
+
+        nodeCounter = 0;
         int depth = 5;
+
         while (true) {
             Solution result = depthLimitedSearch(problem, depth);
             if (result.getStatus() != 2) 
                 return result;
             depth++;
         }
+
     }
 
     private Solution depthLimitedSearch(BlockWorld problem, int limit) {
+
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         Solution answer = depthRecursor(start, problem, limit);
         return answer;
+
     }
 
     //null object for fail, same for cutoff, new for solution
     private Solution depthRecursor(Node start, BlockWorld problem, int limit) {
+
         boolean cutoffReached = false;
+
+        nodeCounter++;
         if (goalTest(start)) {
             Solution successSolution = new Solution(start, 1);
             return successSolution;
@@ -95,6 +103,7 @@ public class Solver {
                 }
             }
         }
+
         if (cutoffReached) {
             Solution cutoffSol = new Solution(start, 2);
             return cutoffSol;
@@ -102,10 +111,12 @@ public class Solver {
             Solution failSolution = new Solution(start, 0);
             return failSolution;
         }
+
     }
 
     private Solution heuristicSearch(BlockWorld problem) {
 
+        int nodesChecked = 0;
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
 
@@ -118,8 +129,12 @@ public class Solver {
         while (!fringe.isEmpty()) {
     
             Node current = fringe.poll();
-            if (goalTest(current))
+            
+            nodesChecked++;
+            if (goalTest(current)) {
+                System.out.println("Nodes checked: " + nodesChecked);
                 return new Solution(current, 1);
+            }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
@@ -130,12 +145,14 @@ public class Solver {
         
         }
 
+        System.out.println("Nodes checked: " + nodesChecked);
         return new Solution(start, 0);
         
     }
 
     private Solution breadthFirstSearch(BlockWorld problem, ArrayDeque<Node> fringe) {
         
+        int nodesChecked = 0;
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
         fringe.add(start);
@@ -144,8 +161,11 @@ public class Solver {
         while (!fringe.isEmpty()) {
 
             Node current = fringe.poll();
-            if (goalTest(current))
+            nodesChecked++;
+            if (goalTest(current)) {
+                System.out.println("Nodes checked: " + nodesChecked);
                 return new Solution(current, 1);
+            }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
@@ -156,12 +176,14 @@ public class Solver {
 
         }
 
+        System.out.println("Nodes checked: " + nodesChecked);
         return new Solution(start, 0);
 
     }
 
     private Solution depthFirstSearch(BlockWorld problem, Stack<Node> fringe) {
 
+        int nodesChecked = 0;
         Node start = new Node(null, problem.getState(), 0, "START", 0);
         ArrayList<int[][]> visited = new ArrayList<int[][]>();
         fringe.push(start);
@@ -170,8 +192,11 @@ public class Solver {
         while (!fringe.isEmpty()) {
 
             Node current = fringe.pop();
-            if (goalTest(current))
+            nodesChecked++;
+            if (goalTest(current)) {
+                System.out.println("Nodes checked: " + nodesChecked);
                 return new Solution(current, 1);
+            }
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
@@ -182,6 +207,7 @@ public class Solver {
 
         }
 
+        System.out.println("Nodes checked: " + nodesChecked);
         return new Solution(start, 0);
 
     } 
