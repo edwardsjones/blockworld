@@ -23,21 +23,21 @@ public class Solver {
         solver.setGridSize(gridSize);
         solver.visualiseState(problem.getState());
     
+        /*
         Stack<Node> stackFringe = new Stack<Node>();
         Solution solutionDFS = solver.depthFirstSearch(problem, stackFringe);
         solver.showSolution(solutionDFS);
 
-        /*
         ArrayDeque<Node> queueFringe = new ArrayDeque<Node>();
         Solution solutionBFS = solver.breadthFirstSearch(problem, queueFringe);
         solver.showSolution(solutionBFS);
         
         Solution solutionIDS = solver.iterativeDeepeningSearch(problem);
         solver.showSolution(solutionIDS);
+        */
         
         Solution solutionHS = solver.heuristicSearch(problem);
         solver.showSolution(solutionHS);
-        */
 
     }
 
@@ -65,6 +65,7 @@ public class Solver {
 
         while (true) {
             Solution result = depthLimitedSearch(problem, depth);
+            System.out.println(depth);
             if (result.getStatus() != 2) {
                 System.out.println("Nodes checked: " + nodeCounter);
                 System.out.println("Nodes expanded: " + nodeExpansion);
@@ -217,8 +218,8 @@ public class Solver {
 
             visited.add(current.getState());
             ArrayList<Node> next = expand(current, problem);
-            nodesExpanded = nodesExpanded + next.size();
             Collections.shuffle(next);
+            nodesExpanded = nodesExpanded + next.size();
 
             for (Node each : next) {
                 if (!contained(visited, each.getState())) 
@@ -243,6 +244,7 @@ public class Solver {
             System.out.printf("|\n");
         } 
         System.out.printf("|\n");
+
     }
 
     private boolean goalTest(Node node) {
@@ -272,6 +274,7 @@ public class Solver {
         Node solved = solution.getNode();
         System.out.println("Cost of solution: " + solved.getPathCost());
         System.out.println("Depth of node: " + solved.getDepth());
+
         Stack<String> winningActions = new Stack<String>();
         Node current = solved;
         do {
@@ -284,7 +287,8 @@ public class Solver {
         while (!winningActions.isEmpty()) {
             System.out.printf(winningActions.pop() + "\t");
         }
-        System.out.printf("|\n");
+        System.out.printf("\n");
+
     }
 
     // Works by providing a score of what the biggest partial tower is

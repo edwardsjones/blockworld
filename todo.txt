@@ -38,22 +38,26 @@ Blockworld Project Todo:
 
 2(e). Implement solution usage in 2(a) and 2(b)=DONE
 
-3. Run each search with various problem sizes and record results
+3. Run each search with various problem sizes and record results=DONE
     -implement node counter=DONE
     -choose permanent start state=DONE
     -change start state to be fixed=DONE
     -choose results to take=DONE
-    -record them
+    -record them=DONE
 
-4. Graph it
+4. Graph it=DONE
+    -decide on graphs=DONE
+    -write results into csv=DONE
+    -plot on gnuplot=DONE
 
-5. Write report
-    -description of methods
-    -evidence of search methods in operation
-    -example solutions
-    -describe how problem difficulty was controlled
-    -plot of results
-    -brief discussion
+5. Write report=DONE
+    -description of methods=DONE
+    -evidence of search methods in operation=DONE
+    -example solutions=DONE
+    -describe how problem difficulty was controlled=DONE
+    -plot of results=DONE
+    -brief discussion=DONE
+    -references=DONE
 
 EXTRA:
 
