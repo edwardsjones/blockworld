@@ -1,0 +1,136 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{COMP2208: Search Methods}
+\author{Edward Jones, ej1g13, 425234048}
+\date{}
+\maketitle
+
+\section{Methods}
+
+My methods for this assignment were relatively simple; given that I was to implement a number of different searches, I first thought about what information each node would need to have.
+I came to the conclusion that each node should have a parent node, the state of the puzzle at that given moment, and the action required to get to that node from the parent node. 
+In addition to this, I included the depth and path cost to the nodes even though they are the same for this puzzle, in case I were to modify the puzzle in the future.
+I decided to represent the state in the form of a matrix; all the blank tiles are represented by -1, the agent by 0, and the blocks by any numbers above 0 (depending on the number of blocks). 
+
+In terms of assumptions and other decisions that were not exactly specified, there are a few points I feel worth pointing out.
+The biggest assumption I made concerned the goal state; I decided that the goal state would only accept towers that started from the "floor" of the matrix. 
+This decision turned out to be reasonably arbitrary when I came to coding, as this could be changed relatively simply in the method that checks whether the goal state has been reached.
+Another decision I made was to fix the start state for each problem; that is, if I run the program with the same grid and problem size, the start state will remain constant on each execution.
+The start state places each block in the corner of the grid; if there are more than four blocks, then it will place blocks in groups at the corners. 
+The agent starts below the first block, which is in the top left corner of the matrix.
+The final decision I feel it is worth making a note of is that for all of the searches I implemented, I made it so that they would not visit a state if that state had already been visited before.
+
+With all that being said, my design was relatively simple; I created a class that represented the nodes, a class that represented a solution, a class for any given problem, and a final class that would solve the problems.
+In terms of how I decided to implement the searches, I simply implemented the pseudocode (Russell and Norvig 2002, p5) provided; this meant I used a stack for depth-first search, a queue for breadth-first, and a priority queue for the heuristic search.
+It is also worth mentioning that I decided to randomise the actions for depth-first search, to stop it from choosing the same direction all the time (if it was allowed).
+In terms of scalability, I provided functionality such that the user could choose the size of the grid and the number of blocks to be included. 
+This meant that when it came to recording results, it was easy to control the size and difficulty of the problem. 
+
+\section{Evidence of Functionality}
+
+Below is a screencapture of the terminal after running breadth-first search on a small puzzle (only two blocks). I have added a line to the search method so that each state the search expands is visualised.
+The first state is the start state; the two after that are the possible moves from that position. 
+In addition to this is the sequence of moves required to get from the start state to the final state, the number of nodes checked before finding the solution, the number of nodes expanded (but not necessarily checked) and the cost/depth of the solution. 
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.5]{evidence}
+\end{figure}
+
+In addition to the above, are a couple of examples of solutions to problems of a bit more difficulty. The first solution is from breadth-first search, and the second from heuristic. 
+
+\begin{figure}[h]
+	\centering	
+		\includegraphics[scale=0.5]{example}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.5]{example2}
+\end{figure}
+
+\newpage
+
+\section{Results}
+
+Below are graphs of the results that it was feasible for me to take; for many searches, problem sizes above a certain size would take too long to terminate for me to record them. 
+
+\begin{figure}[h]
+	\caption{Graph with iterative deepening search.}
+	\centering
+		\includegraphics[scale=0.5]{gridsize3wids}
+\end{figure}
+
+\begin{figure}[h]
+	\caption{Without iterative deepening search.}
+	\centering
+		\includegraphics[scale=0.5]{gridszie3}
+\end{figure}
+
+This is a graph of the nodes expanded in each search method when performed on  a grid of size 3. The problem size, i.e. the number of blocks, is listed on the x axis. As iterative deepening search dwarfs
+the other searches in terms of nodes expanded, I have included one graph with it, and one without it so that the results can be fully appreciated. \\
+\vspace{0.4cm}
+
+\begin{figure}
+	\caption{Grid of size 4.}
+	\centering
+		\includegraphics[scale=0.5]{gridsize4}
+\end{figure}
+
+\begin{figure}
+	\caption{Grid of size 5.}
+	\centering
+		\includegraphics[scale=0.5]{gridsize5}
+\end{figure}
+
+\begin{figure}
+	\caption{Grid of size 6.}
+	\centering
+		\includegraphics[scale=0.5]{gridsize6}
+\end{figure}
+
+In terms of how these results were attained, all but depth first search simply required running the program once with the required problem and grid size, as they would return the same solution/results every time.
+These results were then placed into a .csv file, and plotted using gnuplot.
+For depth first, as the actions taken each node were randomised, it was necessary to run the search a number of times and average the result; I chose to take five results, as this seemed enough to give an idea of the general 
+result but without sacrificing too much time on execution when the problems became more complex. 
+Furthermore, some of the searches are missing from the graphs of larger problem sizes; this is due to the running time of the search reaching too large a size to be easily examined.
+
+\section{Discussion}
+
+From the results, it think it can be said with some confidence that the heuristic search performed the best; although the solutions it provided were not optimal, the amount of nodes expanded increased at a much slower rate than any of the other searches. 
+After that, depth first search performed the next best, then breadth first, and iterative deepening performed the worst; on a grid size of four or above no problems were feasible.
+
+The first thing that this points out is the sheer amount of nodes that are checked which wouldn't be considered by a human i.e. moving the agent away from the blocks. 
+With only a simply heuristic, which was based on not moving into a state if it broke up any partial towers, the number of nodes expanded decreased significantly; emph{thousands} of nodes were saved by this logic. 
+In fact, this search is the only search to complete the all of the specified problems in any reasonable amount of time; furthermore, it is capable of solving larger problems in similar times.
+
+Iterative deepening search is the worst in terms of number of nodes checked, as it repeatedly checks nodes it has already checked if it does not find a solution at the depth it is at. 
+Any problem of in a grid of size four or above proved to take too much time, and so only two results are available for this search.
+Even from this, it can be seen that the amount of nodes expanded utterly dwarfs any other search.
+Despite this, as iterative deepening is only ever performing a depth-first search, it is much more space efficient (Korf 1985, p100) than breadth-first search whilst still finding the optimal solution. 
+
+Breadth first doesn't do much better than iterative deepening, as they undergo similar searching processes. 
+Depth first performed reasonably well on small problem sizes, although the solutions it provided were usually very far from optimal.
+When the problem size increased to anything reasonably significant, it would take a long time to produce an incredibly long solution, eventually getting to the point where it took too much time to bother with.
+
+In conclusion, it can be seen that blind searching is not really a feasible method of finding solutions of any significant size in a problem such as this. Even a simple heuristic implemented correctly can 
+increase the amount of puzzles able to be solved by a significant amount, if the user is willing to sacrifice optimality (in the case of my heuristic, though not all). 
+
+In terms of the limitations of this work, there are a few obvious draw backs that 
+I would be inclined to point out; the first, is that of the results. If I had more time, it would have been interesting to write a script that ran the searches and left them running for an extended period of time, 
+e.g. a week, to see what sorts of numbers the other searches produced in more difficult problems. This would have provided a little more context for the results. Furthermore, it would have been interesting 
+to see how well the iterative deepening search performed on problems if I were to include some functionality that stopped it checking any node that had been checked before in the entirety of the running time of the 
+search, not just that paticular iteration of the search. I think this would drastically improve it's performance. One more feature I feel would be interesting to experiment with would be bi-directional search; 
+implementing this would allow me to attain a bigger set of results due to increased performance.
+
+\section{References}
+
+1. KORF, R. (1985) Depth-First Iterative-Deepening; An Optimal Admissabe Tree Search. \emph{Artificial Intelligence}, 27 (1), 100. \\
+
+\noindent 2. RUSSELL, S. and NORVIG, P. (2002) \emph{Artificial Intelligence: A Modern Approach}. Prentice Hall. Available from: aima.cs.berkeley.edu/2nd-ed/algotest.pdf [Accessed 20th November 2014]
+
+\end{document}
